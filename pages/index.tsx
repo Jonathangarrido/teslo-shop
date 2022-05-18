@@ -1,6 +1,10 @@
-import { Typography } from '@mui/material'
+import { Card, CardActionArea, CardMedia, Grid, Typography } from '@mui/material'
 import type { NextPage } from 'next'
+
 import { ShopLayout } from '../components/layouts'
+import { initialData } from '../database/products'
+import { ProductList } from '../components/products/ProductList'
+import { IProduct } from '../interfaces/products'
 
 const Home: NextPage = () => {
   return (
@@ -13,6 +17,8 @@ const Home: NextPage = () => {
       <Typography variant="h2" sx={{ mb: 1 }}>
         Todos los productos
       </Typography>
+
+      <ProductList products={initialData.products as any} />
     </ShopLayout>
   )
 }
