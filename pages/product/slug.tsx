@@ -2,6 +2,7 @@ import { Box, Button, Chip, Grid, Typography } from '@mui/material'
 import type { NextPage } from 'next'
 
 import { ShopLayout } from '../../components/layouts/ShopLayout'
+import ProductSlideshow from '../../components/products/ProductSlideshow'
 import { initialData } from '../../database/products'
 
 const product = initialData.products[0]
@@ -10,7 +11,9 @@ const ProductPage: NextPage = () => {
   return (
     <ShopLayout title={product.title} pageDescription={product.description}>
       <Grid container spacing={3}>
-        <Grid item xs={12} sm={7}></Grid>
+        <Grid item xs={12} sm={7}>
+          <ProductSlideshow images={product.images} />
+        </Grid>
         <Grid item xs={12} sm={5}>
           <Typography variant="h1" component="h1">
             {product.title}
