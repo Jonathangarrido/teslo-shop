@@ -1,5 +1,6 @@
-import { Box, Card, CardActionArea, CardMedia, Grid, Typography } from '@mui/material'
 import { useState, useMemo } from 'react'
+import NextLink from 'next/link'
+import { Box, Card, CardActionArea, CardMedia, Grid, Link, Typography } from '@mui/material'
 
 import { IProduct } from '../../interfaces/products'
 
@@ -22,9 +23,18 @@ export const ProductCard = ({ product }: props) => {
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}>
       <Card>
-        <CardActionArea>
-          <CardMedia component="img" image={productImage} alt={product.title} className="fadeIn" />
-        </CardActionArea>
+        <NextLink href={`/product/slug`} passHref prefetch={false}>
+          <Link>
+            <CardActionArea>
+              <CardMedia
+                component="img"
+                image={productImage}
+                alt={product.title}
+                className="fadeIn"
+              />
+            </CardActionArea>
+          </Link>
+        </NextLink>
       </Card>
       <Box sx={{ mt: 1 }} className="fadeIn">
         <Typography fontWeight={700}>{product.title}</Typography>

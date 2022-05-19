@@ -6,7 +6,7 @@ import { initialData } from '../database/products'
 import { ProductList } from '../components/products/ProductList'
 import { IProduct } from '../interfaces/products'
 
-const Home: NextPage = () => {
+const HomePage: NextPage = () => {
   return (
     <ShopLayout
       title="Teslo-Shop - Home"
@@ -23,4 +23,4 @@ const Home: NextPage = () => {
   )
 }
 
-export default Home
+export default HomePage
