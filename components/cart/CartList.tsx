@@ -6,7 +6,11 @@ import { ItemCounter } from '../ui'
 
 const productsInCart = [initialData.products[0], initialData.products[1], initialData.products[2]]
 
-export const CartList = () => {
+interface props {
+  editable?: boolean
+}
+
+export const CartList = ({ editable = false }: props) => {
   return (
     <>
       {productsInCart.map((product) => (
@@ -31,14 +35,17 @@ export const CartList = () => {
                 Talla: <strong>M</strong>
               </Typography>
 
-              <ItemCounter />
+              {editable ? <ItemCounter /> : <Typography variant="h5">3 items</Typography>}
             </Box>
           </Grid>
           <Grid item xs={2} display="flex" alignItems="center" flexDirection="column">
             <Typography variant="subtitle1">{`$${product.price}`}</Typography>
-            <Button variant="text" color="secondary">
-              Remover
-            </Button>
+
+            {editable && (
+              <Button variant="text" color="secondary">
+                Remover
+              </Button>
+            )}
           </Grid>
         </Grid>
       ))}
