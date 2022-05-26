@@ -1,12 +1,19 @@
-import { Card, CardActionArea, CardMedia, Grid, Typography } from '@mui/material'
+import { Typography } from '@mui/material'
 import type { NextPage } from 'next'
+import useSWR from 'swr'
 
 import { ShopLayout } from '../components/layouts'
 import { initialData } from '../database/products'
 import { ProductList } from '../components/products/ProductList'
-import { IProduct } from '../interfaces/products'
 
 const HomePage: NextPage = () => {
+  const fetcher = (...args: [key: string]) => fetch(...args).then((res) => res.json())
+
+  const { data, error } = useSWR('/api/products', fetcher)
+
+  if (error) return <div>failed to load</div>
+  if (!data) return <div>loading...</div>
+
   return (
     <ShopLayout
       title="Teslo-Shop - Home"
@@ -18,7 +25,7 @@ const HomePage: NextPage = () => {
         Todos los productos
       </Typography>
 
-      <ProductList products={initialData.products as any} />
+      <ProductList products={data} />
     </ShopLayout>
   )
 }
