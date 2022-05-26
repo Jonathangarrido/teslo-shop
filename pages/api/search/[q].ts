@@ -5,13 +5,13 @@ import { IProduct } from '../../../interfaces'
 
 type Data = 
 | { message: string }
-| IProduct
+| IProduct[]
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
 
   switch (req.method) {
     case 'GET':
-      return getProductBySlug(req,res)
+      return searchProducts(req,res)
   
     default:
       return res.status(400).json({
@@ -21,21 +21,28 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 
 }
 
-const getProductBySlug = async(req: NextApiRequest, res: NextApiResponse<Data>) => {
-  const { slug } = req.query
-  
-  await db.connect()
+const searchProducts = async(req: NextApiRequest, res: NextApiResponse<Data>) => {
+  let { q = '' } = req.query
 
-  const product = await Product.findOne({slug}).lean()
-
-  await db.disconnect()
-
-  if(!product){
+  if(q.length === 0){
     return res.status(400).json({
-      message: 'Producto no encontrado'
+      message: 'Debe de especificar el query de busqueda'
     })
   }
 
-  return res.status(200).json(product)
+  q = q.toString().toLowerCase()
+  
+  await db.connect()
+
+  const products = await Product.find({
+    $text: { $search: q }
+  })
+  .select('title images price inStock slug -_id')
+  .lean()
+
+  await db.disconnect()
+
+
+  return res.status(200).json(products)
 
 }
