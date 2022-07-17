@@ -1,0 +1,88 @@
+{
+	// Place your v8 workspace snippets here. Each snippet is defined under a snippet name and has a scope, prefix, body and
+	// description. Add comma separated ids of the languages where the snippet is applicable in the scope field. If scope
+	// is left empty or omitted, the snippet gets applied to all languages. The prefix is what is
+	// used to trigger the snippet and the body will be expanded and inserted. Possible variables are:
+	// $1, $2 for tab stops, $0 for the final cursor position, and ${1:label}, ${2:another} for placeholders.
+	// Placeholders with the same ids are connected.
+	// Example:
+	// "Print to console": {
+	// 	"scope": "javascript,typescript",
+	// 	"prefix": "log",
+	// 	"body": [
+	// 		"console.log('$1');",
+	// 		"$2"
+	// 	],
+	// 	"description": "Log output to console"
+  // }
+	"React context index": {
+		"scope": "typescript",
+		"prefix": "reactcontext-index",
+		"body": [
+			"export * from './${1:name}Context'",
+			"export * from './${1:name}Provider'",
+			"export * from './${1:name/downcase}Reducer'",
+		],
+		"description": "React context index"
+	},
+	"React reducer": {
+		"scope": "typescript",
+		"prefix": "reactcontext-reducer",
+		"body": [
+			"import { ${1:Name}State } from './'",
+			"",
+			"type ${1:Name}ActionType = ",
+			"| { type: '${1:Name} - ${3:Action}' }",
+			"",
+			"export const ${2:Name}Reducer = (state: ${1:Name}State, action: ${1:Name}ActionType): ${1:Name}State => {",
+			"  switch (action.type) {",
+			"    case '${1:Name} - ${3:Action}':",
+			"      return {...state}",
+			"",
+			"    default:",
+			"      return state",
+			"  }",
+			"}",
+		],
+		"description": "React reducer"
+	},
+	"React custom context": {
+		"scope": "typescriptreact",
+		"prefix": "reactcontext",
+		"body": [
+			"import { createContext } from 'react'",
+			"",
+			"interface ContextProps {",
+			"  ${2:props}: boolean",
+			"}",
+			"",
+			"export const ${1:Name}Context = createContext({} as ContextProps)",
+			"",
+		],
+		"description": "React custom Context"
+	},
+	"React custom provider": {
+		"scope": "typescriptreact",
+		"prefix": "reactprovider",
+		"body": [
+			"import { FC, useReducer } from 'react'",
+			"import { ${1:Name}Context, ${1:/downcase}Reducer } from './'",
+			"",
+			"export interface ${1:Name}State {",
+			"  ${2:props}: boolean",
+			"}",
+			"",
+			"const ${1:Name}_INITIAL_STATE: ${1:Name}State = {",
+			"  ${2:props}: false,",
+			"}",
+			"",
+			"export const ${1:Name}Provider: FC = ({ children }) => {",
+			"  const [state, dispatch] = useReducer(${1:/downcase}Reducer, ${1:Name}_INITIAL_STATE)",
+			"",
+			"  return <${1:Name}Context.Provider value={{ ${2:props}: false }}>{children}</${1:Name}Context.Provider>",
+			"}",
+			"",
+		],
+		"description": "React custom Provider"
+	}
+}
