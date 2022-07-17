@@ -1,4 +1,5 @@
-import { Box, Button, Grid, Typography } from '@mui/material'
+import { useState, useContext } from 'react'
+import { Box, Button, Chip, Grid, Typography } from '@mui/material'
 import type { GetStaticPaths, GetStaticProps, NextPage } from 'next'
 
 import { ShopLayout } from '../../components/layouts/ShopLayout'
@@ -6,13 +7,46 @@ import { SizeSelector } from '../../components/products'
 import ProductSlideshow from '../../components/products/ProductSlideshow'
 import { ItemCounter } from '../../components/ui'
 import { dbProducts } from '../../database'
-import { IProduct } from '../../interfaces'
+import { ICartProduct, IProduct, ISizes } from '../../interfaces'
+import { useRouter } from 'next/router'
+import { CartContext } from '../../context/'
 
 interface Props {
   product: IProduct
 }
 
 const ProductPage: NextPage<Props> = ({ product }) => {
+  const router = useRouter()
+  const { addProductToCart } = useContext(CartContext)
+  const [tempCartProduct, setTempCartProduct] = useState<ICartProduct>({
+    _id: product._id,
+    image: product.images[0],
+    price: product.price,
+    size: undefined,
+    slug: product.slug,
+    title: product.title,
+    gender: product.gender,
+    quantity: 1,
+  })
+
+  const selectedSize = (size: ISizes) => {
+    setTempCartProduct((currentProduct) => ({
+      ...currentProduct,
+      size,
+    }))
+  }
+
+  const updatedQuantity = (quantity: number) =>
+    setTempCartProduct((currentProduct) => ({
+      ...currentProduct,
+      quantity,
+    }))
+
+  const onAddProduct = () => {
+    addProductToCart(tempCartProduct)
+    router.push('/cart')
+  }
+
   return (
     <ShopLayout title={product.title} pageDescription={product.description}>
       <Grid container spacing={3}>
@@ -29,15 +63,29 @@ const ProductPage: NextPage<Props> = ({ product }) => {
 
           <Box sx={{ my: 2 }}>
             <Typography variant="subtitle2">Cantidad</Typography>
-            <ItemCounter />
-            <SizeSelector selectedSize={product.sizes[0]} sizes={product.sizes} />
+            <ItemCounter
+              currentValue={tempCartProduct.quantity}
+              updatedQuantity={updatedQuantity}
+              maxValue={product.inStock}
+            />
+            <SizeSelector
+              selectedSize={tempCartProduct.size}
+              sizes={product.sizes}
+              onClick={selectedSize}
+            />
           </Box>
 
-          <Button color="secondary" className="circular-btn">
-            Agregar al carrito
-          </Button>
-
-          {/* <Chip label="No hay disponibles" color="error" variant="outlined" /> */}
+          {product.inStock > 0 ? (
+            <Button
+              color="secondary"
+              className="circular-btn"
+              onClick={onAddProduct}
+              disabled={!tempCartProduct.size}>
+              {tempCartProduct.size ? 'Agregar al carrito' : 'Seleccione una talla'}
+            </Button>
+          ) : (
+            <Chip label="No hay disponibles" color="error" variant="outlined" />
+          )}
 
           <Box sx={{ mt: 3 }}>
             <Typography variant="subtitle2">Descripción</Typography>
