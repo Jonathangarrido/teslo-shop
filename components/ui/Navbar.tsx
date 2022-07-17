@@ -1,8 +1,13 @@
 import NextLink from 'next/link'
 import { AppBar, Badge, Box, Button, IconButton, Link, Toolbar, Typography } from '@mui/material'
 import { SearchOutlined, ShoppingCartOutlined } from '@mui/icons-material'
+import { useRouter } from 'next/router'
 
 export const Navbar = () => {
+  const { asPath } = useRouter()
+
+  const validatePath = (path: string) => asPath === `/category/${path}`
+
   return (
     <AppBar>
       <Toolbar>
@@ -19,10 +24,23 @@ export const Navbar = () => {
           sx={{
             display: { xs: 'none', sm: 'block' },
           }}>
-          {['men', 'women', 'children'].map((item, key) => (
-            <NextLink href={`/category/${item}`} passHref key={key}>
+          {[
+            { path: 'men', name: 'hombres' },
+            { path: 'women', name: 'mujeres' },
+            { path: 'children', name: 'niños' },
+          ].map((item, key) => (
+            <NextLink href={`/category/${item.path}`} passHref key={key}>
               <Link>
-                <Button>{item}</Button>
+                <Button
+                  className={validatePath(item.path) ? 'activated' : ''}
+                  color={validatePath(item.path) ? 'primary' : 'info'}
+                  sx={{
+                    '&.activated:hover': {
+                      background: '#1E1E1E',
+                    },
+                  }}>
+                  {item.name}
+                </Button>
               </Link>
             </NextLink>
           ))}
