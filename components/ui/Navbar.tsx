@@ -4,11 +4,12 @@ import { AppBar, Badge, Box, Button, IconButton, Link, Toolbar, Typography } fro
 import { SearchOutlined, ShoppingCartOutlined } from '@mui/icons-material'
 import { useRouter } from 'next/router'
 
-import { UiContext } from '../../context'
+import { UiContext, CartContext } from '../../context'
 
 export const Navbar = () => {
   const { asPath } = useRouter()
   const { toggleSideMenu } = useContext(UiContext)
+  const { numberOfItems } = useContext(CartContext)
 
   const validatePath = (path: string) => asPath === `/category/${path}`
 
@@ -59,7 +60,7 @@ export const Navbar = () => {
         <NextLink href="/cart" passHref>
           <Link>
             <IconButton>
-              <Badge badgeContent={2} color="secondary">
+              <Badge badgeContent={numberOfItems > 9 ? '+9' : numberOfItems} color="secondary">
                 <ShoppingCartOutlined />
               </Badge>
             </IconButton>

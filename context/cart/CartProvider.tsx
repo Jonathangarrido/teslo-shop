@@ -6,10 +6,18 @@ import { CartContext, cartReducer } from './'
 
 export interface CartState {
   cart: ICartProduct[]
+  numberOfItems: number
+  subTotal: number
+  tax: number
+  total: number
 }
 
 const CART_INITIAL_STATE: CartState = {
   cart: [],
+  numberOfItems: 0,
+  subTotal: 0,
+  tax: 0,
+  total: 0,
 }
 
 interface props {
@@ -32,6 +40,28 @@ export const CartProvider = ({ children }: props) => {
 
   useEffect(() => {
     Cookie.set('cart', JSON.stringify(state.cart))
+  }, [state.cart])
+
+  useEffect(() => {
+    let numberOfItems = 0
+    let subTotal = 0
+
+    state.cart.forEach((item) => {
+      numberOfItems += item.quantity
+      subTotal += item.quantity * item.price
+    })
+
+    const tax = Number(process.env.NEXT_PUBLIC_TAX_RATE || 0)
+
+    dispatch({
+      type: 'Cart - Update orden summary',
+      payload: {
+        numberOfItems,
+        subTotal,
+        tax: subTotal * tax,
+        total: subTotal * (tax + 1),
+      },
+    })
   }, [state.cart])
 
   const addProductToCart = (product: ICartProduct) => {
