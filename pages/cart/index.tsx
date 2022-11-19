@@ -8,11 +8,9 @@ import { CartContext } from '../../context'
 
 const CartPage = () => {
   const { isLoaded, cart } = useContext(CartContext)
-  console.log('isLoaded:', isLoaded)
   const router = useRouter()
 
   useEffect(() => {
-    console.log('cart:', cart)
     if (isLoaded && cart.length === 0) {
       router.replace('/cart/empty')
     }

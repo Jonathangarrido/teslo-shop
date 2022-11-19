@@ -2,6 +2,7 @@ import { useEffect, useReducer } from 'react'
 import { useRouter } from 'next/router'
 import axios from 'axios'
 import Cookies from 'js-cookie'
+import { useSession, signOut } from 'next-auth/react'
 
 import { tesloApi } from '../../api'
 import { IUser } from '../../interfaces'
@@ -24,6 +25,13 @@ interface props {
 export const AuthProvider = ({ children }: props) => {
   const [state, dispatch] = useReducer(authReducer, AUTH_INITIAL_STATE)
   const router = useRouter()
+  const { data, status } = useSession()
+
+  useEffect(() => {
+    if (status === 'authenticated') {
+      dispatch({ type: 'Auth - Login', payload: data.user as IUser })
+    }
+  }, [status, data])
 
   const checkToken = async () => {
     if (!Cookies.get('token')) {
@@ -40,9 +48,9 @@ export const AuthProvider = ({ children }: props) => {
     }
   }
 
-  useEffect(() => {
-    checkToken()
-  }, [])
+  // useEffect(() => {
+  //   checkToken()
+  // }, [])
 
   const loginUser = async (email: string, password: string): Promise<boolean> => {
     try {
@@ -86,9 +94,17 @@ export const AuthProvider = ({ children }: props) => {
   }
 
   const logout = () => {
-    Cookies.remove('token')
     Cookies.remove('cart')
-    router.reload()
+    Cookies.remove('firstName')
+    Cookies.remove('lastName')
+    Cookies.remove('address')
+    Cookies.remove('address2')
+    Cookies.remove('zip')
+    Cookies.remove('city')
+    Cookies.remove('country')
+    Cookies.remove('phone')
+
+    signOut()
   }
 
   return (

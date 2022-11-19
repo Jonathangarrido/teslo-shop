@@ -1,20 +1,16 @@
+import { getToken } from "next-auth/jwt"
 import { NextFetchEvent, NextRequest, NextResponse } from "next/server"
 
-// import { jwt } from "../../utils"
 
 export async function middleware( req: NextRequest, ev: NextFetchEvent){
 
-  const { token = '' } = req.cookies
+  const session = await getToken({ req, secret: process.env.NEXTAUTH_SECRET })
 
-  // TODO: Validar esto ya que no esta
+  if(!session){
+    const url = req.nextUrl.clone()
+    url.pathname = `/auth/login`
+    return NextResponse.rewrite(url)
+  }
+
   return NextResponse.next()
-
-  // try {
-
-  //   await jwt.isValidaToken(token)
-  //   return NextResponse.next()
-    
-  // } catch (error) {
-  //   return NextResponse.redirect(`/auth/login?p=${ req.page.name }`)
-  // }
 }
