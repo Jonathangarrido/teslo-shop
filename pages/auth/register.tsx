@@ -28,6 +28,8 @@ const RegisterPage = () => {
   const [showError, setShowError] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
 
+  const destination = router.query.p?.toString() ?? '/'
+
   const onRegisterForm = async ({ name, email, password }: IFormData) => {
     setShowError(false)
 
@@ -42,7 +44,7 @@ const RegisterPage = () => {
       return
     }
 
-    router.replace('/')
+    router.replace(destination)
   }
 
   return (
@@ -126,7 +128,7 @@ const RegisterPage = () => {
             </Grid>
 
             <Grid item xs={12} display="flex" justifyContent="end">
-              <NextLink href="/auth/login" passHref>
+              <NextLink href={`/auth/login?p=${destination}`} passHref>
                 <Link underline="always">¿ya tienes cuenta?</Link>
               </NextLink>
             </Grid>
