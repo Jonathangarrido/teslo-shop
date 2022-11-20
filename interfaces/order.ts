@@ -1,10 +1,11 @@
 import { IUser } from "./"
+import { ISizes } from './products'
 
 export interface IOrder {
   _id?: string
   user?: IUser | string
   orderItems: IOrderItem[]
-  shippingAdress: IShippingAddress
+  shippingAddress: IShippingAddress
   paymentResult?: string
   numberOfItems: number
   subtotal: number
@@ -17,11 +18,12 @@ export interface IOrder {
 export interface IOrderItem {
   _id: string
   title: string
-  size: string
+  size: ISizes
   quantity: number
   slug: string
   image: string
   price: number
+  gender: string
 }
 
 export interface IShippingAddress {
