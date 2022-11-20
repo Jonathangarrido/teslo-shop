@@ -5,12 +5,13 @@ import { useContext } from 'react'
 
 import { ItemCounter } from '../ui'
 import { CartContext } from '../../context'
-import { ICartProduct } from '../../interfaces'
+import { ICartProduct, IOrderItem } from '../../interfaces'
 interface props {
   editable?: boolean
+  products?: IOrderItem[]
 }
 
-export const CartList = ({ editable = false }: props) => {
+export const CartList = ({ editable = false, products }: props) => {
   const { cart, updateCartQuantity, removeCartProduct } = useContext(CartContext)
 
   const handleQuantotyValue = (product: ICartProduct, newQuantity: number) => {
@@ -18,9 +19,11 @@ export const CartList = ({ editable = false }: props) => {
     updateCartQuantity(product)
   }
 
+  const productsToShow = products ?? cart
+
   return (
     <>
-      {cart.map((product) => (
+      {productsToShow.map((product) => (
         <Grid container spacing={2} key={product.slug + product.size} sx={{ mb: 1 }}>
           <Grid item xs={3}>
             <NextLink href={`/product/${product.slug}`} passHref>
@@ -45,7 +48,9 @@ export const CartList = ({ editable = false }: props) => {
               {editable ? (
                 <ItemCounter
                   currentValue={product.quantity}
-                  updatedQuantity={(newQuantity) => handleQuantotyValue(product, newQuantity)}
+                  updatedQuantity={(newQuantity) =>
+                    handleQuantotyValue(product as ICartProduct, newQuantity)
+                  }
                 />
               ) : (
                 <Typography variant="h5">
@@ -58,7 +63,10 @@ export const CartList = ({ editable = false }: props) => {
             <Typography variant="subtitle1">{`$${product.price}`}</Typography>
 
             {editable && (
-              <Button variant="text" color="secondary" onClick={() => removeCartProduct(product)}>
+              <Button
+                variant="text"
+                color="secondary"
+                onClick={() => removeCartProduct(product as ICartProduct)}>
                 Remover
               </Button>
             )}

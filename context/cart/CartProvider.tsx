@@ -137,7 +137,7 @@ export const CartProvider = ({ children }: props) => {
       })),
       shippingAddress: state.shippingAddress,
       numberOfItems: state.numberOfItems,
-      subtotal: state.subTotal,
+      subTotal: state.subTotal,
       tax: state.tax,
       total: state.total,
       isPaid: false,

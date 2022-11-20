@@ -8,7 +8,7 @@ export interface IOrder {
   shippingAddress: IShippingAddress
   paymentResult?: string
   numberOfItems: number
-  subtotal: number
+  subTotal: number
   tax: number
   total: number
   isPaid: boolean
